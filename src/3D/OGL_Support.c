@@ -389,13 +389,12 @@ OGLStyleDefType *styleDefPtr = &setupDefPtr->styles;
 	glDisable(GL_BLEND);									// but turn it off by default
 
 //	glHint(GL_TRANSFORM_HINT_APPLE, GL_FASTEST);	// srcport rm
-
+#ifndef __vita__
 	glDisable(GL_RESCALE_NORMAL);
-
     glHint(GL_FOG_HINT, GL_NICEST);		// pixel accurate fog?
 
 	OGL_CheckError();
-
+#endif
 			/* ENABLE ALPHA CHANNELS */
 
 	glEnable(GL_ALPHA_TEST);
@@ -403,9 +402,9 @@ OGLStyleDefType *styleDefPtr = &setupDefPtr->styles;
 
 
 		/* SET FOG */
-
+#ifndef __vita__
 	glHint(GL_FOG_HINT, GL_FASTEST);
-
+#endif
 	if (styleDefPtr->useFog)
 	{
 		glFogi(GL_FOG_MODE, styleDefPtr->fogMode);
@@ -1188,10 +1187,11 @@ uint32_t	a;
 
 void OGL_Texture_SetOpenGLTexture(GLuint textureName)
 {
+#ifndef __vita__
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	if (OGL_CheckError())
 		DoFatalAlert("OGL_Texture_SetOpenGLTexture: glPixelStorei failed!");
-
+#endif
 	glBindTexture(GL_TEXTURE_2D, textureName);
 	if (OGL_CheckError())
 		DoFatalAlert("OGL_Texture_SetOpenGLTexture: glBindTexture failed!");
@@ -1372,6 +1372,7 @@ OGLLightDefType	*lights;
 
 GLenum _OGL_CheckError(const char* file, const int line)
 {
+#ifndef __vita__
 	GLenum error = glGetError();
 	if (error != 0)
 	{
@@ -1380,6 +1381,9 @@ GLenum _OGL_CheckError(const char* file, const int line)
 		DoFatalAlert(buf);
 	}
 	return error;
+#else
+	return GL_NO_ERROR;
+#endif
 }
 
 

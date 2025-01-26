@@ -10,6 +10,15 @@
 #include <iostream>
 #include <cstring>
 
+#ifdef __vita__
+#include <unistd.h> 
+#include <vitasdk.h>
+extern "C" {
+int _newlib_heap_size_user = 256 * 1024 * 1024;
+void vglInitExtended(int legacy_pool_size, int width, int height, int ram_threshold, SceGxmMultisampleMode msaa);
+};
+#endif
+
 extern "C"
 {
 	#include "game.h"
@@ -54,7 +63,11 @@ tryAgain:
 			break;
 
 		case 2:
+#if defined(__vita__)
+			dataPath = "ux0:data/OttoMatic/Data";
+#else
 			dataPath = "Data";
+#endif
 			break;
 
 		default:
@@ -229,6 +242,23 @@ int main(int argc, char** argv)
 	int				returnCode				= 0;
 	std::string		finalErrorMessage		= "";
 	bool			showFinalErrorMessage	= false;
+
+#ifdef __vita__
+	sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
+	SceCommonDialogConfigParam cmnDlgCfgParam;
+	sceCommonDialogConfigParamInit(&cmnDlgCfgParam);
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, (int *)&cmnDlgCfgParam.language);
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, (int *)&cmnDlgCfgParam.enterButtonAssign);
+	sceCommonDialogSetConfigParam(&cmnDlgCfgParam);
+	
+	SDL_setenv("VITA_DISABLE_TOUCH_BACK", "1", 1);
+	scePowerSetArmClockFrequency(444);
+	scePowerSetBusClockFrequency(222);
+	scePowerSetGpuClockFrequency(222);
+	scePowerSetGpuXbarClockFrequency(166);
+	vglInitExtended(2 * 1024 * 1024, 960, 544, 2 * 1024 * 1024, SCE_GXM_MULTISAMPLE_4X);
+	chdir("ux0:data");
+#endif
 
 	try
 	{

@@ -806,12 +806,12 @@ use_current:
 													glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_ADD);
 													break;
 										}
-
+#ifndef __vita__
 										glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);										// activate reflection mapping
 										glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 										glEnable(GL_TEXTURE_GEN_S);
 										glEnable(GL_TEXTURE_GEN_T);
-
+#endif
 									}
 								}
 								break;
@@ -854,13 +854,14 @@ use_current:
 													glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_ADD);
 													break;
 										}
-
+#ifndef __vita__
 									    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 									    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 									    glTexGenfv(GL_S, GL_OBJECT_PLANE, s_plane);
 									    glTexGenfv(GL_T, GL_OBJECT_PLANE, t_plane);
 										glEnable(GL_TEXTURE_GEN_S);
 										glEnable(GL_TEXTURE_GEN_T);
+#endif
 
 									}
 								}
@@ -920,14 +921,17 @@ go_here:
 		glActiveTextureARB(GL_TEXTURE1_ARB);			// turn off textureing for multi-texture layer 2 since it isnt needed anymore
 		glClientActiveTextureARB(GL_TEXTURE1_ARB);
 		glDisable(GL_TEXTURE_2D);
+#ifndef __vita__
 		glDisable(GL_TEXTURE_GEN_S);
 		glDisable(GL_TEXTURE_GEN_T);
-
+#endif
 		glActiveTextureARB(GL_TEXTURE0_ARB);			// make sure #0 is active when we leave
 		glClientActiveTextureARB(GL_TEXTURE0_ARB);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+#ifndef __vita__
 		glDisable(GL_TEXTURE_GEN_S);
 		glDisable(GL_TEXTURE_GEN_T);
+#endif
 	}
 
 }
